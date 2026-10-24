@@ -1,4 +1,6 @@
-# asciihex  site is live at https://pdragonlabs.github.io/asciihex/
+# asciihex
+
+Site is live at https://pdragonlabs.github.io/asciihex/
 
 A simple, self-contained HTML page that converts ASCII text to and from multiple encodings — inspired by [asciitohex.com](https://www.asciitohex.com/).
 
@@ -31,3 +33,5 @@ A simple, self-contained HTML page that converts ASCII text to and from multiple
 ## License
 
 Free to use and modify.
+
+<!-- Write access confirmed -->
