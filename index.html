@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ASCII to Hex - Free Text Conversion Tools</title>
+  <meta name="description" content="Convert ASCII text to Hex, Binary, Base64, Decimal, ROT13, URL Encoded, and HTML Entities. Bidirectional free online converter.">
+  <style>
+    :root {
+      --bg: #ffffff;
+      --fg: #1a1a1a;
+      --muted: #666;
+      --border: #ddd;
+      --accent: #0066cc;
+      --accent-hover: #0052a3;
+      --box-bg: #f8f9fa;
+      --input-bg: #fff;
+      --shadow: 0 1px 3px rgba(0,0,0,0.1);
+    }
+    [data-theme="dark"] {
+      --bg: #15171a;
+      --fg: #e8e8e8;
+      --muted: #aaa;
+      --border: #333;
+      --accent: #4da6ff;
+      --accent-hover: #80c1ff;
+      --box-bg: #1e2126;
+      --input-bg: #252830;
+      --shadow: 0 1px 3px rgba(0,0,0,0.3);
+    }
+    * { box-sizing: border-box; }
+    body {
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      background: var(--bg);
+      color: var(--fg);
+      line-height: 1.5;
+      margin: 0;
+      padding: 1rem;
+      max-width: 900px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    header {
+      text-align: center;
+      margin-bottom: 1.5rem;
+    }
+    h1 { margin: 0 0 0.25rem; font-size: 1.8rem; }
+    h2 { margin: 0; font-size: 1.1rem; font-weight: normal; color: var(--muted); }
+    .theme-toggle {
+      position: fixed;
+      top: 1rem;
+      right: 1rem;
+      background: var(--box-bg);
+      border: 1px solid var(--border);
+      border-radius: 50%;
+      width: 2.5rem;
+      height: 2.5rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.2rem;
+    }
+    .box {
+      background: var(--box-bg);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 1rem;
+      margin-bottom: 1rem;
+      box-shadow: var(--shadow);
+    }
+    .box h3 {
+      margin: 0 0 0.5rem;
+      font-size: 1rem;
+      font-weight: 600;
+    }
+    textarea {
+      width: 100%;
+      min-height: 80px;
+      padding: 0.75rem;
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      background: var(--input-bg);
+      color: var(--fg);
+      font-family: ui-monospace, "Cascadia Code", "Source Code Pro", Menlo, Consolas, monospace;
+      font-size: 0.9rem;
+      resize: vertical;
+      line-height: 1.4;
+    }
+    .actions {
+      display: flex;
+      gap: 0.5rem;
+      margin-top: 0.5rem;
+      flex-wrap: wrap;
+    }
+    button, .btn {
+      background: var(--accent);
+      color: #fff;
+      border: none;
+      padding: 0.4rem 0.8rem;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 0.85rem;
+    }
+    button:hover, .btn:hover { background: var(--accent-hover); }
+    .copy-btn {
+      background: transparent;
+      color: var(--accent);
+      border: 1px solid var(--accent);
+    }
+    .copy-btn:hover { background: var(--accent); color: #fff; }
+    .status {
+      font-size: 0.8rem;
+      color: var(--muted);
+      margin-left: 0.5rem;
+    }
+    footer {
+      text-align: center;
+      margin-top: 2rem;
+      font-size: 0.85rem;
+      color: var(--muted);
+    }
+    @media (max-width: 600px) {
+      body { padding: 0.75rem; }
+      h1 { font-size: 1.5rem; }
+    }
+  </style>
+</head>
+<body>
+  <button class="theme-toggle" id="themeToggle" title="Toggle theme" aria-label="Toggle light/dark theme">🌙</button>
+
+  <header>
+    <h1>ASCII to Hex</h1>
+    <h2>...and other free text conversion tools</h2>
+  </header>
+
+  <div class="box">
+    <h3><label for="ascii">Text (ASCII / ANSI)</label></h3>
+    <textarea id="ascii" placeholder="Enter text here...">I gave a cry of astonishment. I saw and thought nothing of the other four Martian monsters; my attention was riveted upon the nearer incident. Simultaneously two other shells burst in the air near the body as the hood twisted round in time to receive, but not in time to dodge, the fourth shell.</textarea>
+    <div class="actions">
+      <button id="convertFromAscii">Convert from Text</button>
+      <button class="copy-btn" data-target="ascii">Copy</button>
+      <span class="status" id="status-ascii"></span>
+    </div>
+  </div>
+
+  <div class="box">
+    <h3><label for="binary">Binary</label></h3>
+    <textarea id="binary" placeholder="Space-separated 8-bit binary..."></textarea>
+    <div class="actions">
+      <button data-from="binary">Convert from Binary</button>
+      <button class="copy-btn" data-target="binary">Copy</button>
+      <span class="status" id="status-binary"></span>
+    </div>
+  </div>
+
+  <div class="box">
+    <h3><label for="hex">Hexadecimal</label></h3>
+    <textarea id="hex" placeholder="Space-separated hex bytes (e.g. 49 20 67)..."></textarea>
+    <div class="actions">
+      <button data-from="hex">Convert from Hex</button>
+      <button class="copy-btn" data-target="hex">Copy</button>
+      <span class="status" id="status-hex"></span>
+    </div>
+  </div>
+
+  <div class="box">
+    <h3><label for="base64">BASE64</label></h3>
+    <textarea id="base64" placeholder="Base64 encoded string..."></textarea>
+    <div class="actions">
+      <button data-from="base64">Convert from Base64</button>
+      <button class="copy-btn" data-target="base64">Copy</button>
+      <span class="status" id="status-base64"></span>
+    </div>
+  </div>
+
+  <div class="box">
+    <h3><label for="decimal">Decimal</label></h3>
+    <textarea id="decimal" placeholder="Space-separated decimal character codes..."></textarea>
+    <div class="actions">
+      <button data-from="decimal">Convert from Decimal</button>
+      <button class="copy-btn" data-target="decimal">Copy</button>
+      <span class="status" id="status-decimal"></span>
+    </div>
+  </div>
+
+  <div class="box">
+    <h3><label for="rot13">ROT13</label></h3>
+    <textarea id="rot13" placeholder="ROT13 encoded text..."></textarea>
+    <div class="actions">
+      <button data-from="rot13">Convert from ROT13</button>
+      <button class="copy-btn" data-target="rot13">Copy</button>
+      <span class="status" id="status-rot13"></span>
+    </div>
+  </div>
+
+  <div class="box">
+    <h3><label for="urlencode">URL Encoded</label></h3>
+    <textarea id="urlencode" placeholder="URL-encoded string (spaces as +)..."></textarea>
+    <div class="actions">
+      <button data-from="urlencode">Convert from URL Encoded</button>
+      <button class="copy-btn" data-target="urlencode">Copy</button>
+      <span class="status" id="status-urlencode"></span>
+    </div>
+  </div>
+
+  <div class="box">
+    <h3><label for="entities">HTML Entities</label></h3>
+    <textarea id="entities" placeholder="HTML entity encoded text..."></textarea>
+    <div class="actions">
+      <button data-from="entities">Convert from HTML Entities</button>
+      <button class="copy-btn" data-target="entities">Copy</button>
+      <span class="status" id="status-entities"></span>
+    </div>
+  </div>
+
+  <footer>
+    <p>Free text conversion tools — bidirectional ASCII ↔ Hex, Binary, Base64, Decimal, ROT13, URL, HTML Entities.</p>
+    <p>Inspired by asciitohex.com</p>
+  </footer>
+
+  <script>
+    const fields = ['ascii', 'binary', 'hex', 'base64', 'decimal', 'rot13', 'urlencode', 'entities'];
+    const $ = id => document.getElementById(id);
+
+    function showStatus(id, msg) {
+      const el = $('status-' + id);
+      if (el) {
+        el.textContent = msg;
+        setTimeout(() => { if (el.textContent === msg) el.textContent = ''; }, 2000);
+      }
+    }
+
+    // Conversion helpers
+    function textToBytes(text) {
+      return new TextEncoder().encode(text);
+    }
+
+    function bytesToText(bytes) {
+      try {
+        return new TextDecoder().decode(bytes);
+      } catch {
+        return '[decode error]';
+      }
+    }
+
+    function textToBinary(text) {
+      return Array.from(textToBytes(text))
+        .map(b => b.toString(2).padStart(8, '0'))
+        .join(' ');
+    }
+
+    function binaryToText(bin) {
+      const parts = bin.trim().split(/\s+/).filter(Boolean);
+      const bytes = new Uint8Array(parts.map(p => parseInt(p, 2)));
+      return bytesToText(bytes);
+    }
+
+    function textToHex(text) {
+      return Array.from(textToBytes(text))
+        .map(b => b.toString(16).padStart(2, '0'))
+        .join(' ');
+    }
+
+    function hexToText(hex) {
+      const parts = hex.trim().split(/\s+/).filter(Boolean);
+      const bytes = new Uint8Array(parts.map(p => parseInt(p, 16)));
+      return bytesToText(bytes);
+    }
+
+    function textToBase64(text) {
+      return btoa(unescape(encodeURIComponent(text)));
+    }
+
+    function base64ToText(b64) {
+      try {
+        return decodeURIComponent(escape(atob(b64.trim())));
+      } catch {
+        return '[invalid base64]';
+      }
+    }
+
+    function textToDecimal(text) {
+      return Array.from(text).map(c => c.charCodeAt(0)).join(' ');
+    }
+
+    function decimalToText(dec) {
+      const parts = dec.trim().split(/\s+/).filter(Boolean);
+      return parts.map(n => String.fromCharCode(parseInt(n, 10))).join('');
+    }
+
+    function rot13(text) {
+      return text.replace(/[a-zA-Z]/g, c => {
+        const base = c <= 'Z' ? 65 : 97;
+        return String.fromCharCode((c.charCodeAt(0) - base + 13) % 26 + base);
+      });
+    }
+
+    function textToUrl(text) {
+      return encodeURIComponent(text).replace(/%20/g, '+');
+    }
+
+    function urlToText(url) {
+      try {
+        return decodeURIComponent(url.replace(/\+/g, ' '));
+      } catch {
+        return '[invalid url encoding]';
+      }
+    }
+
+    function textToEntities(text) {
+      const div = document.createElement('div');
+      div.textContent = text;
+      return div.innerHTML;
+    }
+
+    function entitiesToText(html) {
+      const div = document.createElement('div');
+      div.innerHTML = html;
+      return div.textContent || '';
+    }
+
+    // Update all fields from source
+    function updateAllFrom(sourceId) {
+      let text = '';
+      const val = $(sourceId).value;
+
+      try {
+        switch (sourceId) {
+          case 'ascii': text = val; break;
+          case 'binary': text = binaryToText(val); break;
+          case 'hex': text = hexToText(val); break;
+          case 'base64': text = base64ToText(val); break;
+          case 'decimal': text = decimalToText(val); break;
+          case 'rot13': text = rot13(val); break;
+          case 'urlencode': text = urlToText(val); break;
+          case 'entities': text = entitiesToText(val); break;
+        }
+      } catch (e) {
+        showStatus(sourceId, 'Error: invalid input');
+        return;
+      }
+
+      // Populate all other fields
+      if (sourceId !== 'ascii') $('ascii').value = text;
+      if (sourceId !== 'binary') $('binary').value = textToBinary(text);
+      if (sourceId !== 'hex') $('hex').value = textToHex(text);
+      if (sourceId !== 'base64') $('base64').value = textToBase64(text);
+      if (sourceId !== 'decimal') $('decimal').value = textToDecimal(text);
+      if (sourceId !== 'rot13') $('rot13').value = rot13(text);
+      if (sourceId !== 'urlencode') $('urlencode').value = textToUrl(text);
+      if (sourceId !== 'entities') $('entities').value = textToEntities(text);
+
+      showStatus(sourceId, 'Converted');
+    }
+
+    // Event listeners
+    document.getElementById('convertFromAscii').addEventListener('click', () => updateAllFrom('ascii'));
+
+    document.querySelectorAll('button[data-from]').forEach(btn => {
+      btn.addEventListener('click', () => updateAllFrom(btn.dataset.from));
+    });
+
+    document.querySelectorAll('.copy-btn').forEach(btn => {
+      btn.addEventListener('click', async () => {
+        const target = btn.dataset.target;
+        const text = $(target).value;
+        try {
+          await navigator.clipboard.writeText(text);
+          showStatus(target, 'Copied!');
+        } catch {
+          showStatus(target, 'Copy failed');
+        }
+      });
+    });
+
+    // Theme toggle
+    const themeToggle = document.getElementById('themeToggle');
+    function setTheme(theme) {
+      document.documentElement.setAttribute('data-theme', theme);
+      themeToggle.textContent = theme === 'dark' ? '☀️' : '🌙';
+      localStorage.setItem('theme', theme);
+    }
+    themeToggle.addEventListener('click', () => {
+      const current = document.documentElement.getAttribute('data-theme') || 'light';
+      setTheme(current === 'dark' ? 'light' : 'dark');
+    });
+    // Init theme
+    const saved = localStorage.getItem('theme');
+    if (saved) setTheme(saved);
+    else if (window.matchMedia('(prefers-color-scheme: dark)').matches) setTheme('dark');
+
+    // Initial conversion
+    updateAllFrom('ascii');
+  </script>
+</body>
+</html>
